@@ -20,4 +20,8 @@
         <Using Include="NUnit.Framework"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\NNTP_Projekt_D25\NNTP_Projekt_D25.csproj" />
+    </ItemGroup>
+
 </Project>
