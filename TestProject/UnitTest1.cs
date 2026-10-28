@@ -1,4 +1,7 @@
-﻿namespace TestProject;
+﻿using NNTP_Projekt_D25.Services;
+using NNTP_Projekt_D25.Views;
+
+namespace TestProject;
 using NNTP_Projekt_D25;
 
 public class Tests
@@ -6,12 +9,22 @@ public class Tests
     [SetUp]
     public void Setup()
     {
-        NNTP_Projekt_D25.Create_Connection("SimonAagaard", "asdgsgs");
+        NntpService.Create_Connection("SimonAagaard", "pjlmewywy");
+        NntpResponseChecker responseChecker = new NntpResponseChecker();
     }
 
     [Test]
-    public void Test1()
+    public void IsConnectedToServer()
     {
-        Assert.Pass();
+        bool actual = NntpResponseChecker.IsGreetingSuccessful(NntpService.greetingResponse);
+        Assert.That(actual, Is.True);
     }
+    
+    [Test]
+    public void IsLoggedIn()
+    {
+        bool actual = NntpResponseChecker.IsLoginSuccessful(NntpService.loginResponse);
+        Assert.That(actual, Is.True);
+    }
+    
 }
