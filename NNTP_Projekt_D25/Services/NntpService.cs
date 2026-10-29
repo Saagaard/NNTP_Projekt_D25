@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using System.Xml;
+using Avalonia.Controls;
+using NNTP_Projekt_D25.Views;
 
 namespace NNTP_Projekt_D25.Services;
 
 public static class NntpService
 {
+    public static string? response;
     public static string? greetingResponse;
     public static string? loginResponse;
+    private static NetworkStream? ns;
+    private static StreamReader? reader;
+    private static StreamWriter? writer;
+    private static TcpClient? client;
+    private static List<string>? newsgroups;
     
     public static void Create_Connection(string username, string password)
     {
@@ -18,15 +27,15 @@ public static class NntpService
 
         try
         {
-            using var client = new TcpClient();
+            client = new TcpClient();
             client.ReceiveTimeout = 3000;
             client.SendTimeout = 3000;
 
             client.Connect(host, port);
 
-            using NetworkStream ns = client.GetStream();
-            using var reader = new StreamReader(ns, Encoding.ASCII);
-            using var writer = new StreamWriter(ns, Encoding.ASCII)
+            ns = client.GetStream();
+            reader = new StreamReader(ns, Encoding.ASCII);
+            writer = new StreamWriter(ns, Encoding.ASCII)
             {
                 NewLine = "\r\n",
                 AutoFlush = true
@@ -48,7 +57,7 @@ public static class NntpService
 
             // Send username
             writer.WriteLine($"AUTHINFO USER {username}");
-            string? response = reader.ReadLine();
+            response = reader.ReadLine();
             Console.WriteLine("Sender username... " + username);
             Console.WriteLine("Server: " + response);
 
@@ -64,19 +73,34 @@ public static class NntpService
                 if (NntpResponseChecker.IsLoginSuccessful(loginResponse))
                 {
                     Console.WriteLine("Login successful!");
+                    GetNewsgroups();
                 }
                 else
                 {
                     Console.WriteLine("Authentication failed or was not accepted.");
                     return;
                 }
-
-
+                
             }
             else
             {
                 return;
             }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Fejl: " + ex.Message);
+        }
+    }
+
+    public static List<string> GetNewsgroups()
+    {
+        if (newsgroups != null) {
+            return newsgroups; 
+        }
+        if (NntpResponseChecker.IsLoginSuccessful(loginResponse))
+        {
 
             // Request list of newsgroups
             writer.WriteLine("LIST");
@@ -86,11 +110,9 @@ public static class NntpService
             // Check if the server accepted the LIST command
             if (response != null && response.StartsWith("215"))
             {
-                // Console.WriteLine(reader.ReadLine());
-                // Console.WriteLine(reader.ReadLine());
-                // Console.WriteLine(reader.ReadLine());
-                List<string> newsgroups = new List<string>();
-                
+
+                newsgroups = new List<string>();
+
                 string? line;
 
                 for (int i = 0; i < 5; i++)
@@ -102,22 +124,68 @@ public static class NntpService
                     }
                 }
 
-                Console.WriteLine("\nNewsgroups:");
+                return newsgroups;
                 
-                foreach (string group in newsgroups)
-                {
-                    Console.WriteLine(group);
-                }
             }
             else
             {
                 Console.WriteLine("LIST command failed.");
+                
             }
-
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine("Fejl: " + ex.Message);
+            Console.WriteLine("There is no connection to the server");
         }
+
+        return null;
+    }
+    
+    public static List<string> GetArticles(string newsgroup)
+    {
+        Console.WriteLine("Getting articles from " + newsgroup);
+        if (NntpResponseChecker.IsLoginSuccessful(loginResponse))
+        {
+
+            // Request list of articles
+            writer.WriteLine("group " + newsgroup);
+            response = reader.ReadLine();
+            Console.WriteLine("Server: " + response);
+
+            // Check if the server accepted the GROUP command
+            if (response != null && response.StartsWith("211"))
+            {
+                writer.WriteLine("xover");
+                response = reader.ReadLine();
+                Console.WriteLine("Server: " + response);
+                
+                newsgroups = new List<string>();
+
+                string? line;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    line = reader.ReadLine();
+                    if (line != null && line != ".")
+                    {
+                        newsgroups.Add(line);
+                    }
+                }
+
+                return newsgroups;
+                
+            }
+            else
+            {
+                Console.WriteLine("LIST command failed.");
+                
+            }
+        }
+        else
+        {
+            Console.WriteLine("There is no connection to the server");
+        }
+
+        return null;
     }
 }

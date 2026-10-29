@@ -9,9 +9,9 @@ using NNTP_Projekt_D25.Services;
 
 namespace NNTP_Projekt_D25.Views;
 
-public partial class MainWindow : Window
+public partial class Login : Window
 {
-    public MainWindow()
+    public Login()
     {
         InitializeComponent();
     }
@@ -20,6 +20,12 @@ public partial class MainWindow : Window
     {
         
         NntpService.Create_Connection(box_user.Text, box_pass.Text);
+        if (NntpResponseChecker.IsGreetingSuccessful(NntpService.greetingResponse))
+        {
+            Content = new Newsgroups();
+        }
+        
+
     }
 
     
