@@ -25,6 +25,7 @@ public partial class Newsgroups : UserControl
     private void Newsgroup_Button_Click(string group)
     {
         //Console.WriteLine(group);
-        Content = new ArticleList(group);
+        Content = new ArticleList(group.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0]);
+        
     }
 }

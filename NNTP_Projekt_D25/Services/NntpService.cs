@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
@@ -18,7 +18,7 @@ public static class NntpService
     private static StreamReader? reader;
     private static StreamWriter? writer;
     private static TcpClient? client;
-    private static List<string>? newsgroups;
+    private static IList<string>? newsgroups;
     
     public static void Create_Connection(string username, string password)
     {
@@ -94,7 +94,7 @@ public static class NntpService
         }
     }
 
-    public static List<string> GetNewsgroups()
+    public static IList<string> GetNewsgroups()
     {
         if (newsgroups != null) {
             return newsgroups; 
@@ -110,18 +110,19 @@ public static class NntpService
             // Check if the server accepted the LIST command
             if (response != null && response.StartsWith("215"))
             {
-
+                IList<string> lines = new List<string>();
                 newsgroups = new List<string>();
 
                 string? line;
 
-                for (int i = 0; i < 5; i++)
+                while ((line = reader.ReadLine()) != null && line != ".")
                 {
-                    line = reader.ReadLine();
-                    if (line != null && line != ".")
-                    {
-                        newsgroups.Add(line);
-                    }
+                    lines.Add(line);
+                }
+
+                foreach (string responseLine in lines)
+                {
+                    newsgroups.Add(responseLine);
                 }
 
                 return newsgroups;
@@ -141,13 +142,14 @@ public static class NntpService
         return null;
     }
     
-    public static List<string> GetArticles(string newsgroup)
+    public static IList<string> GetArticles(string newsgroup)
     {
         Console.WriteLine("Getting articles from " + newsgroup);
         if (NntpResponseChecker.IsLoginSuccessful(loginResponse))
         {
 
             // Request list of articles
+            Console.WriteLine("group " + newsgroup);
             writer.WriteLine("group " + newsgroup);
             response = reader.ReadLine();
             Console.WriteLine("Server: " + response);
@@ -155,29 +157,36 @@ public static class NntpService
             // Check if the server accepted the GROUP command
             if (response != null && response.StartsWith("211"))
             {
+                // XOVER
+                Console.WriteLine("xover");
                 writer.WriteLine("xover");
                 response = reader.ReadLine();
                 Console.WriteLine("Server: " + response);
-                
-                newsgroups = new List<string>();
 
-                string? line;
-
-                for (int i = 0; i < 5; i++)
+                if (response != null && response.StartsWith("224"))
                 {
-                    line = reader.ReadLine();
-                    if (line != null && line != ".")
-                    {
-                        newsgroups.Add(line);
-                    }
-                }
 
-                return newsgroups;
-                
+                    IList<string> lines = new List<string>();
+                    IList<string> articles = new List<string>();
+
+                    string? line;
+
+                    while ((line = reader.ReadLine()) != null && line != ".")
+                    {
+                        lines.Add(line);
+                    }
+
+                    foreach (string responseLine in lines)
+                    {
+                        articles.Add(responseLine);
+                    }
+
+                    return articles;
+                }
             }
             else
             {
-                Console.WriteLine("LIST command failed.");
+                Console.WriteLine("GROUP command failed.");
                 
             }
         }
