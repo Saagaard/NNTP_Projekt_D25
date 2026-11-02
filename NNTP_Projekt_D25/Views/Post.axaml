@@ -1,0 +1,23 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="NNTP_Projekt_D25.Views.Post">
+        
+    <ScrollViewer VerticalScrollBarVisibility="Visible">
+        <StackPanel>
+            <StackPanel>
+                <Button Click="Go_back">Go Back</Button>
+                <TextBox PlaceholderText="Type here..." x:Name="post_text"></TextBox>
+            </StackPanel>
+                        
+            <StackPanel>
+                <Button Click="Button_OnClick">Post</Button>
+            </StackPanel>
+                        
+        </StackPanel>
+    </ScrollViewer>
+        
+        
+</UserControl>
