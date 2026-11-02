@@ -16,4 +16,9 @@ public class NntpResponseChecker
     {
         return response?.StartsWith("281") == true;
     }
+
+    public static bool AreGroupsShown(string? response)
+    {
+        return response?.StartsWith("215") == true;
+    }
 }

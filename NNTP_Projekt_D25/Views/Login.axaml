@@ -19,7 +19,7 @@
         <TextBox Text="{Binding Greeting}"
                  HorizontalAlignment="Center"
                  VerticalAlignment="Center" />
-        <TextBox PlaceholderText="Username" x:Name="box_user"></TextBox>
+        <TextBox PlaceholderText="Username" x:Name="box_user">SimonAagaard</TextBox>
         <TextBox PlaceholderText="Password" x:Name="box_pass">pjlmewywy</TextBox>
         <Button HorizontalAlignment="Center" Click="Send_UserPass">Connect</Button>
     </StackPanel>

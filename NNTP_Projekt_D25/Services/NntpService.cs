@@ -105,6 +105,7 @@ public static class NntpService
             // Request list of newsgroups
             writer.WriteLine("LIST");
             response = reader.ReadLine();
+            Console.WriteLine("Getting newsgroup LIST...");
             Console.WriteLine("Server: " + response);
 
             // Check if the server accepted the LIST command
@@ -157,11 +158,19 @@ public static class NntpService
             // Check if the server accepted the GROUP command
             if (response != null && response.StartsWith("211"))
             {
-                // XOVER
-                Console.WriteLine("xover");
-                writer.WriteLine("xover");
-                response = reader.ReadLine();
-                Console.WriteLine("Server: " + response);
+                try
+                {
+                    // XOVER
+                    Console.WriteLine("xover");
+                    writer.WriteLine("xover");
+                    response = reader.ReadLine();
+                    Console.WriteLine("Server: " + response);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    throw new Exception("Could not get articles from " + newsgroup);
+                }
 
                 if (response != null && response.StartsWith("224"))
                 {
@@ -182,11 +191,63 @@ public static class NntpService
                     }
 
                     return articles;
+
+
+                } else if (response != null && response.StartsWith("420"))
+                {
+                    return new List<string>();
+                    Console.WriteLine("0 articles in this newsgroup");
                 }
+                
+                
+                
             }
             else
             {
                 Console.WriteLine("GROUP command failed.");
+                
+            }
+        }
+        else
+        {
+            Console.WriteLine("There is no connection to the server");
+        }
+
+        return null;
+    }
+    
+    public static string GetArticle(string article_id)
+    {
+        Console.WriteLine("Getting article " + article_id);
+        if (NntpResponseChecker.IsLoginSuccessful(loginResponse))
+        {
+
+            // Request list of articles
+            Console.WriteLine("article " + article_id);
+            writer.WriteLine("article " + article_id);
+            response = reader.ReadLine();
+            Console.WriteLine("Server: " + response);
+
+            // Check if the server accepted the ARTICLE command
+            if (response != null && response.StartsWith("220"))
+            {
+                response = reader.ReadLine();
+                Console.WriteLine("Server: " + response);
+
+                string article = "";
+                string? line;
+
+                while ((line = reader.ReadLine()) != null && line != ".")
+                {
+                    article += line + "\n";
+                }
+
+                return article;
+
+            }
+            else
+            {
+                Console.WriteLine("ARTICLE command failed.");
                 
             }
         }

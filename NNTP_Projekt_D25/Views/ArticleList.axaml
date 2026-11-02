@@ -6,9 +6,20 @@
         x:Class="NNTP_Projekt_D25.Views.ArticleList">
 
         <StackPanel>
-                <ListBox x:Name="article_list">
+                <StackPanel>
+                        <Button Click="Button_OnClick">Go back</Button>
+                </StackPanel>
+                
+                <ScrollViewer VerticalScrollBarVisibility="Visible">
+                        <StackPanel>
 
-                </ListBox>
+                                        <ListBox x:Name="article_list">
+
+                                        </ListBox>
+
+                        </StackPanel>
+                </ScrollViewer>
         </StackPanel>
+
         
 </UserControl>

@@ -4,7 +4,9 @@
     <option name="projectPerEditor">
       <map>
         <entry key="NNTP_Projekt_D25/App.axaml" value="NNTP_Projekt_D25/NNTP_Projekt_D25.csproj" />
+        <entry key="NNTP_Projekt_D25/Views/Article.axaml" value="NNTP_Projekt_D25/NNTP_Projekt_D25.csproj" />
         <entry key="NNTP_Projekt_D25/Views/ArticleList.axaml" value="NNTP_Projekt_D25/NNTP_Projekt_D25.csproj" />
+        <entry key="NNTP_Projekt_D25/Views/Login.axaml" value="NNTP_Projekt_D25/NNTP_Projekt_D25.csproj" />
         <entry key="NNTP_Projekt_D25/Views/MainWindow.axaml" value="NNTP_Projekt_D25/NNTP_Projekt_D25.csproj" />
         <entry key="NNTP_Projekt_D25/Views/Newsgroups.axaml" value="NNTP_Projekt_D25/NNTP_Projekt_D25.csproj" />
       </map>

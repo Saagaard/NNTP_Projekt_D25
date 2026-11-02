@@ -5,11 +5,13 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="NNTP_Projekt_D25.Views.Newsgroups">
 
-    <StackPanel>
-        <ListBox x:Name="newsgroup_list">
-            
-        </ListBox>
-    </StackPanel>
+    <ScrollViewer>
+        <StackPanel>
+            <ListBox x:Name="newsgroup_list">
+                
+            </ListBox>
+        </StackPanel>
+    </ScrollViewer>
         
         
 </UserControl>
