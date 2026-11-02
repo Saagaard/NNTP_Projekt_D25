@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
@@ -257,5 +257,42 @@ public static class NntpService
         }
 
         return null;
+    }
+
+    public static bool CreatePost(string post)
+    {
+        Console.WriteLine("Trying to post...");
+        if (NntpResponseChecker.IsLoginSuccessful(loginResponse))
+        {
+
+            // Post?
+            Console.WriteLine("POST");
+            writer.WriteLine("POST");
+            response = reader.ReadLine();
+            Console.WriteLine("Server: " + response);
+
+            // Check if the server accepted the ARTICLE command
+            if (response != null && response.StartsWith("340"))
+            {
+                response = reader.ReadLine();
+                Console.WriteLine("Server: " + response);
+
+                string article = "";
+
+                // Work in progress
+
+            }
+            else
+            {
+                Console.WriteLine("POST command failed.");
+                
+            }
+        }
+        else
+        {
+            Console.WriteLine("There is no connection to the server");
+        }
+
+        return false;
     }
 }

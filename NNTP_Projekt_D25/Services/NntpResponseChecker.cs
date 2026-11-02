@@ -22,3 +22,5 @@ public class NntpResponseChecker
         return response?.StartsWith("215") == true;
     }
 }
+
+

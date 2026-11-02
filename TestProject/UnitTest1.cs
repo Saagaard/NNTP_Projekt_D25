@@ -27,11 +27,5 @@ public class Tests
         Assert.That(actual, Is.True);
     }
 
-    // [Test]
-    // public void ShowGroups()
-    // {
-    //     bool actual = NntpResponseChecker.AreGroupsShown();
-    //     Assert.That(actual, Is.True);
-    // }
     
 }

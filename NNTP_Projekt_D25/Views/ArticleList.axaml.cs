@@ -36,4 +36,9 @@ public partial class ArticleList : UserControl
     {
         Content = new Newsgroups();
     }
+
+    private void Create_Post(object? sender, RoutedEventArgs e)
+    {
+        Content = new Post(currentNewsgroup);
+    }
 }

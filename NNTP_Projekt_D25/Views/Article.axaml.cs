@@ -21,3 +21,4 @@ public partial class Article : UserControl
         Content = new ArticleList(newsgroup);
     }
 }
+
